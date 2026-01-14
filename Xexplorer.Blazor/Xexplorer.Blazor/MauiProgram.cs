@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Serilog;
+using Xexplorer.Blazor.Utils;
 using Xexplorer.Blazor.ViewModels;
 
 namespace Xexplorer.Blazor;
@@ -34,6 +35,8 @@ public static class MauiProgram
             .CreateLogger(); 
         Log.Information("The application has started.");
 
+        AppsettingsUtils.LoadJson();
+        
         var app = builder.Build();
         return app;
     }

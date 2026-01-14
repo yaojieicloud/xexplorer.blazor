@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
+using Serilog;
 using Xexplorer.Blazor.ViewModels;
 
 namespace Xexplorer.Blazor;
@@ -26,6 +27,12 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
+        
+        Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().Enrich.WithThreadId().WriteTo.File(
+                "logs/log.txt", rollingInterval: RollingInterval.Day,
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {ThreadId}] {Message:lj}{NewLine}{Exception}")
+            .CreateLogger(); 
+        Log.Information("The application has started.");
 
         var app = builder.Build();
         return app;

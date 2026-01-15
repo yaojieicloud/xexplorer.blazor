@@ -1,15 +1,18 @@
-﻿namespace Xexplorer.Blazor.ViewModels;
+﻿using System.ComponentModel;
+
+namespace Xexplorer.Blazor.ViewModels;
 
 public class ViewModelBase
 {
     /// <summary>
-    /// The current state of the view model.
+    /// 当状态发生改变时触发的事件
     /// </summary>
-    public event Action? StateChanged;
-
+    public event Action? OnChange;
+    
     /// <summary>
-    /// 通知状态已更改的方法
-    /// 当状态发生改变时调用此方法，触发状态改变事件
+    /// 通知状态已发生改变，触发OnChange事件
     /// </summary>
-    protected void NotifyStateChanged() => StateChanged?.Invoke();
+    protected void NotifyStateChanged() => OnChange?.Invoke();
+
+
 }

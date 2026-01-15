@@ -28,8 +28,35 @@
                 }
             </MudSelect>
         </MudStack>
-        <MudInputString placeholder="Search..."></MudInputString>
-        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit"/>
+        <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-dir">
+            <MudSelect T="ScreenMode" Label="选择尺寸" @bind-Value="mainVM.SelectedMode">
+                @foreach (var screen in mainVM.ScrennModes)
+                {
+                    <MudSelectItem Value="screen">@screen.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
+        <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-dir">
+            <MudSelect T="string" Label="选择关键字" @bind-Value="mainVM.SelectedKeyword"
+                       ReadOnly="false" Disabled="false" SelectAll="true" SelectAllText="全选"
+                       
+                       MultiSelection="true" @bind-SelectedValues="mainVM.SelectedKeywords">
+                @foreach (var key in mainVM.Keywords)
+                {
+                    <MudSelectItem Value="key">@key</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
+        <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-port">
+            <MudSelect T="PlayPort" Label="选择端口" @bind-Value="mainVM.SelectedPort">
+                @foreach (var port in mainVM.Ports)
+                {
+                    <MudSelectItem Value="port">@port.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
+        <MudInputString placeholder="Search..." @bind-Value="mainVM.SelectedKeyword"></MudInputString>
+        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit" OnClick="mainVM.QueryAsync"/>
         <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit"/>
 
@@ -56,6 +83,12 @@
     .mud-dir {
         min-width: 100px;
         max-width: 150px;
+        width: auto;
+        margin-bottom: 16px;
+    }
+    .mud-port {
+        min-width: 150px;
+        max-width: 200px;
         width: auto;
         margin-bottom: 16px;
     }

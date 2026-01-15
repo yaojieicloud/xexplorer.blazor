@@ -30,8 +30,9 @@
                         {
                             <div style="flex: 1 1 auto; min-width: 0;">
                                 <MudPaper Elevation="4">
-                                    <img src=" @AppsettingsUtils.Default.Api.BaseUrl/@AppsettingsUtils.Default.Api.GetImageApi?name=@img.Path"
-                                         class="image-item"/>
+                                    <img
+                                        src=" @AppsettingsUtils.Default.Api.BaseUrl/@AppsettingsUtils.Default.Api.GetImageApi?name=@img.Path"
+                                        class="image-item"/>
                                 </MudPaper>
                             </div>
                         }
@@ -42,10 +43,20 @@
     </Virtualize>
 </div>
 
+@code{
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        homeVM.OnChange += StateHasChanged;
+    }
+
+}
+
 <style>
     .video-row {
-        height: 100vh; 
-        overflow-y: auto; 
+        height: 100vh;
+        overflow-y: auto;
         padding-left: 10px;
     }
 
@@ -56,18 +67,18 @@
         padding-top: 10px;
         padding-left: 10px;
     }
-    
+
     .image-strip {
-        width: 100%; 
+        width: 100%;
         overflow: visible;
     }
-    
+
     /* 针对 MudStack 的内部样式优化 */
     .image-strip .mud-stack {
         display: inline-flex; /* 配合父级的 nowrap */
         flex-wrap: nowrap; /* 禁止 MudStack 换行 */
     }
- 
+
     .image-item {
         display: block;
         width: 100%;

@@ -32,8 +32,16 @@ public class ApiConf
     /// 获取或设置图像API的地址
     /// </summary>
     public string GetImageApi { get; set; }
-    
+
     public string GetDirsApi { get; set; }
+
+    /// <summary>
+    /// 获取视频API的属性
+    /// </summary>
+    /// <remarks>
+    /// 这是一个用于存储视频API接口地址的属性
+    /// </remarks>
+    public string GetVideosApi { get; set; }
 }
 
 /// <summary>

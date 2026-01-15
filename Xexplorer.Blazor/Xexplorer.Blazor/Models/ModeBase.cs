@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace XExplorer.Core.Modes;
 
@@ -7,6 +9,8 @@ namespace XExplorer.Core.Modes;
 /// </summary>
 public abstract class ModeBase
 {
-    [Key]
+    [Key] 
+    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public long Id { get; set; }
 }

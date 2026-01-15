@@ -16,6 +16,14 @@ public class Appsettings
     /// </summary>
     /// <value>DirConf类型的目录配置实例</value>
     public DirConf Dir { get; set; } = new();
+
+    /// <summary>
+    /// 玩家配置属性
+    /// </summary>
+    /// <remarks>
+    /// 用于获取或设置玩家相关的配置信息
+    /// </remarks>
+    public PlayerConf Player { get; set; }
 }
 
 /// <summary>
@@ -33,14 +41,19 @@ public class ApiConf
     /// </summary>
     public string GetImageApi { get; set; }
 
+    /// <summary>
+    /// 获取目录的API地址属性
+    /// </summary>
     public string GetDirsApi { get; set; }
+
+    /// <summary>
+    /// 解压缩文件的API地址属性
+    /// </summary>
+    public string UnZipApi { get; set; }
 
     /// <summary>
     /// 获取视频API的属性
     /// </summary>
-    /// <remarks>
-    /// 这是一个用于存储视频API接口地址的属性
-    /// </remarks>
     public string GetVideosApi { get; set; }
 }
 
@@ -49,6 +62,12 @@ public class ApiConf
 /// </summary>
 public class DirConf
 {
+    /// <summary>
+    /// 获取或设置NAS的路径
+    /// </summary>
+    /// <value>NAS路径的字符串</value>
+    public string Nas { get; set; }
+
     /// <summary>
     /// 数据目录路径，默认值为"/data"
     /// </summary>
@@ -63,4 +82,15 @@ public class DirConf
     /// 子目录名称，默认值为"01_成人资源"
     /// </summary>
     public string SubDir { get; set; } = "01_成人资源";
+}
+
+/// <summary>
+/// 玩家配置类，用于存储玩家相关的配置信息
+/// </summary>
+public class PlayerConf
+{
+    /// <summary>
+    /// 玩家路径属性，用于获取或设置玩家相关的路径信息
+    /// </summary>
+    public string PlayerPath { get; set; }
 }

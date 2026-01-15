@@ -39,7 +39,7 @@
         <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-dir">
             <MudSelect T="string" Label="选择关键字" @bind-Value="mainVM.SelectedKeyword"
                        ReadOnly="false" Disabled="false" SelectAll="true" SelectAllText="全选"
-                       
+
                        MultiSelection="true" @bind-SelectedValues="mainVM.SelectedKeywords">
                 @foreach (var key in mainVM.Keywords)
                 {
@@ -55,11 +55,20 @@
                 }
             </MudSelect>
         </MudStack>
-        <MudInputString placeholder="Search..." @bind-Value="mainVM.SelectedKeyword"></MudInputString>
-        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit" OnClick="mainVM.QueryAsync"/>
-        <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit"/>
-
+        <MudInputString placeholder="Search..." @bind-Value="mainVM.SelectedKeyword"
+                        Style="display: none;"></MudInputString>
+        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit"
+                       Size="Size.Large" OnClick="mainVM.QueryAsync"/>
+        <MudTooltip Text="播放视频">
+            <MudIconButton Icon="@Icons.Material.TwoTone.PlayCircle"
+                           OnClick="mainVM.BathPlayAsync"
+                           Size="Size.Large" Color="Color.Inherit"/>
+        </MudTooltip>
+        <MudTooltip Text="结束播放">
+            <MudIconButton Icon="@Icons.Material.TwoTone.StopCircle" 
+                           OnClick="mainVM.StopPlayAsync"
+                           Size="Size.Large" Color="Color.Inherit"/>
+        </MudTooltip>
     </MudAppBar>
     <MudPaper Height="95vh" Style="overflow:hidden; position:relative;">
         <MudDrawerContainer Class="mud-height-full">
@@ -86,6 +95,7 @@
         width: auto;
         margin-bottom: 16px;
     }
+
     .mud-port {
         min-width: 150px;
         max-width: 200px;

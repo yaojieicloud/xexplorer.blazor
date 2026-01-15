@@ -72,11 +72,6 @@ public partial class MainViewModel
     #region Fields
 
     /// <summary>
-    /// 用于发送HTTP请求的HttpClient实例
-    /// </summary>
-    private readonly HttpClient _http;
-
-    /// <summary>
     /// 表示当前状态是否打开的布尔值
     /// </summary>
     private bool _open;

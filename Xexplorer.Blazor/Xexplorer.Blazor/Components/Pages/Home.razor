@@ -5,41 +5,59 @@
 
 <div class="video-row">
     <Virtualize Items="@homeVM.Videos" ItemSize="350" Context="video">
-        <MudGrid>
-            <MudItem xs="12">
-                <MudPaper xs="12" class="video-title">@video.Caption</MudPaper>
-            </MudItem>
-            <MudItem xs="12">
-                <MudPaper xs="12" Class="d-flex align-content-start flex-wrap flex-grow-1 gap-4" Height="auto"
-                          Elevation="0">
-                    <MudStack Row="true" Spacing="2" Class="image-strip">
-                        <div style="flex: 1 1 auto; min-width: 77px; max-width: 77px; padding-left: 5px">
-                            <MudPaper Elevation="4">
-                                <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled"
-                                                Vertical="true">
-                                    <MudBadge Content="@video.PlayCount.ToString()" Color="Color.Error" Overlap="true">
-                                        <MudButton OnClick="() => homeVM.PlayAsync(video)">播放</MudButton>
-                                    </MudBadge>
-                                    <MudButton OnClick="()=>homeVM.AddPlayListAsync(video)">加入</MudButton>
-                                    <MudButton>删除</MudButton>
-                                    <MudButton>重置</MudButton>
-                                </MudButtonGroup>
-                            </MudPaper>
-                        </div>
-                        @foreach (var img in video.Images)
-                        {
-                            <div style="flex: 1 1 auto; min-width: 0;">
+        <MudPaper Elevation="1" Class="pa-4 video-row-border">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudPaper Elevation="1">
+                        <MudInputLabel xs="12" class="video-title">@video.VideoDir</MudInputLabel>
+                        <MudDivider Class="video-divider"/>
+                        <MudStack Row="true" Spacing="2" Class="image-strip">
+                            <MudRating SelectedValue="@video.Evaluate" Size="Size.Large"/>
+                            <MudInputLabel class="video-title">@video.Caption</MudInputLabel>
+                            <MudInputLabel class="video-title">==</MudInputLabel>
+                            <MudInputLabel class="video-title">@video.Minute 分钟</MudInputLabel>
+                            <MudInputLabel class="video-title">==</MudInputLabel>
+                            <MudInputLabel class="video-title">@video.Length MB</MudInputLabel>
+                            <MudInputLabel class="video-title">==</MudInputLabel>
+                            <MudInputLabel class="video-title">@video.Width x @video.Height</MudInputLabel>
+                            <MudInputLabel class="video-title">==</MudInputLabel>
+                            <MudInputLabel class="video-title">@video.ModifyTime</MudInputLabel>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudPaper xs="12" Class="d-flex align-content-start flex-wrap flex-grow-1 gap-4" Height="auto"
+                              Elevation="0">
+                        <MudStack Row="true" Spacing="2" Class="image-strip">
+                            <div style="flex: 1 1 auto; min-width: 77px; max-width: 77px; padding-left: 5px">
                                 <MudPaper Elevation="4">
-                                    <img
-                                        src=" @AppsettingsUtils.Default.Api.BaseUrl/@AppsettingsUtils.Default.Api.GetImageApi?name=@img.Path"
-                                        class="image-item"/>
+                                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled"
+                                                    Vertical="true">
+                                        <MudBadge Content="@video.PlayCount.ToString()" Color="Color.Error"
+                                                  Overlap="true">
+                                            <MudButton OnClick="() => homeVM.PlayAsync(video)">播放</MudButton>
+                                        </MudBadge>
+                                        <MudButton OnClick="()=>homeVM.AddPlayListAsync(video)">加入</MudButton>
+                                        <MudButton>删除</MudButton>
+                                        <MudButton>重置</MudButton>
+                                    </MudButtonGroup>
                                 </MudPaper>
                             </div>
-                        }
-                    </MudStack>
-                </MudPaper>
-            </MudItem>
-        </MudGrid>
+                            @foreach (var img in video.Images)
+                            {
+                                <div style="flex: 1 1 auto; min-width: 0;">
+                                    <MudPaper Elevation="4">
+                                        <img
+                                            src=" @AppsettingsUtils.Default.Api.BaseUrl/@AppsettingsUtils.Default.Api.GetImageApi?name=@img.Path"
+                                            class="image-item"/>
+                                    </MudPaper>
+                                </div>
+                            }
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
     </Virtualize>
 </div>
 
@@ -54,29 +72,43 @@
 }
 
 <style>
+    .video-divider {
+        border-top: 2px dotted #999;
+        margin-bottom: 1px;
+        margin-top: 1px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
     .video-row {
         height: 100vh;
         overflow-y: auto;
         padding-left: 10px;
     }
 
+    .video-row-border {
+        border: 1px solid #999;
+    }
+
     .video-title {
         font-weight: bold;
         font-size: 20px;
         padding-bottom: 3px;
-        padding-top: 10px;
+        padding-top: 3px;
         padding-left: 10px;
     }
 
     .image-strip {
         width: 100%;
         overflow: visible;
+        display: flex;
+        align-items: center;
     }
 
     /* 针对 MudStack 的内部样式优化 */
     .image-strip .mud-stack {
         display: inline-flex; /* 配合父级的 nowrap */
-        flex-wrap: nowrap; /* 禁止 MudStack 换行 */
+        flex-wrap: nowrap; /* 禁止 MudStack 换行 */        
     }
 
     .image-item {

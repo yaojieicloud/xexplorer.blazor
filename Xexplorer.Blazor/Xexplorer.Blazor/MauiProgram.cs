@@ -14,7 +14,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .ConfigureFonts(fonts => { fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); });
+            .ConfigureFonts(fonts => { fonts.AddFont("AlimamaFangYuanTiVF-Thin.ttf", "AlimamaThin"); });
 
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices();

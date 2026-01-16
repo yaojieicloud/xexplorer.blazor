@@ -3,7 +3,7 @@
 @using Xexplorer.Blazor.ViewModels.Pages
 @inject HomeViewModel homeVM
 
-<div class="video-row">
+<div class="video-row" id="main-container">
     <Virtualize Items="@homeVM.Videos" ItemSize="350" Context="video">
         <MudPaper Elevation="1" Class="pa-4 video-row-border">
             <MudGrid>
@@ -60,8 +60,7 @@
         </MudPaper>
     </Virtualize>
 </div>
-
-@code{
+@code { 
 
     protected override void OnInitialized()
     {
@@ -91,7 +90,8 @@
     }
 
     .video-title {
-        font-weight: bold;
+        font-family: 'AlimamaThin';
+        font-weight: normal;
         font-size: 20px;
         padding-bottom: 3px;
         padding-top: 3px;

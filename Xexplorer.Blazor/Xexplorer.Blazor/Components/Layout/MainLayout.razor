@@ -3,6 +3,7 @@
 @inherits LayoutComponentBase
 @* Required *@
 @inject MainViewModel mainVM
+@inject IJSRuntime JS
 <MudThemeProvider IsDarkMode="true"/>
 <MudPopoverProvider/>
 
@@ -17,8 +18,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.Cottage"
                        Color="Color.Inherit"
                        Edge="Edge.Start"
-                       OnClick="@mainVM.ToggleDrawer"/>
-        <MudText Typo="Typo.h6" Class="ml-3">X Explorer</MudText>
+                       OnClick="@mainVM.ToggleDrawer"/> 
         <MudSpacer/>
         <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-dir">
             <MudSelect T="DirEntry" Label="选择目录" @bind-Value="mainVM.SelectedDir">
@@ -69,6 +69,25 @@
                            OnClick="mainVM.StopPlayAsync"
                            Size="Size.Large" Color="Color.Inherit"/>
         </MudTooltip>
+        <MudInputLabel>|</MudInputLabel>
+        <MudTooltip Text="跳转至底部">
+            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp" 
+                           Style="padding-left: 16px;"
+                           OnClick="@(() => Scroll("top"))"
+                           Size="Size.Medium" Color="Color.Inherit"/>
+        </MudTooltip>
+        <MudTooltip Text="跳转至中部">
+            <MudIconButton Icon="@Icons.Material.Filled.Compress" 
+                           Style="padding-left: 16px;"
+                           OnClick="@(() => Scroll("middle"))"
+                           Size="Size.Medium" Color="Color.Inherit"/>
+        </MudTooltip>
+        <MudTooltip Text="跳转至底部">
+            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowDown" 
+                           Style="padding-left: 16px;"
+                           OnClick="@(() => Scroll("bottom"))"
+                           Size="Size.Medium" Color="Color.Inherit"/>
+        </MudTooltip>
     </MudAppBar>
     <MudPaper Height="93vh" Style="overflow:hidden; position:relative;">
         <MudDrawerContainer Class="mud-height-full">
@@ -114,3 +133,22 @@
         margin-bottom: 16px;
     }
 </style>
+<script>
+    window.scrollUtil = {
+        scroll: function (elementId, position) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            
+            if (position === 'top') el.scrollTop = 0;
+            else if (position === 'bottom') el.scrollTop = el.scrollHeight;
+            else if (position === 'middle') el.scrollTop = el.scrollHeight / 2;
+        }
+    };
+</script>
+@code { 
+    private async Task Scroll(string pos)
+    {
+        // 通过 C# 调用 JS
+        await JS.InvokeVoidAsync("scrollUtil.scroll", "main-container", pos);
+    }
+}

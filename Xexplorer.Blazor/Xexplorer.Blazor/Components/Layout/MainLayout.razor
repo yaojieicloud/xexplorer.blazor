@@ -70,7 +70,7 @@
                            Size="Size.Large" Color="Color.Inherit"/>
         </MudTooltip>
     </MudAppBar>
-    <MudPaper Height="95vh" Style="overflow:hidden; position:relative;">
+    <MudPaper Height="93vh" Style="overflow:hidden; position:relative;">
         <MudDrawerContainer Class="mud-height-full">
             <MudDrawer @bind-Open="@mainVM.Open" Anchor="Anchor.Start" Elevation="1" Variant="@DrawerVariant.Mini"
                        OverlayAutoClose="true">
@@ -79,7 +79,18 @@
                     </MudNavLink>
                     <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Counter
                     </MudNavLink>
-                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
+                    <MudTooltip Text="解压缩">
+                        <MudIconButton Icon="@Icons.Material.Rounded.FolderZip" 
+                                       Style="padding-left: 16px;"
+                                       OnClick="mainVM.StopPlayAsync"
+                                       Size="Size.Medium" Color="Color.Inherit"/>
+                    </MudTooltip>
+                    <MudTooltip Text="批处理">
+                        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" 
+                                       Style="padding-left: 16px;"
+                                       OnClick="mainVM.StopPlayAsync"
+                                       Size="Size.Medium" Color="Color.Inherit"/>
+                    </MudTooltip>
                 </MudNavMenu>
             </MudDrawer>
             <MudPaper>

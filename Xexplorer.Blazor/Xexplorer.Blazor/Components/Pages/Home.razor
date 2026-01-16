@@ -11,7 +11,7 @@
                     <MudPaper Elevation="1">
                         <MudInputLabel xs="12" class="video-title">@video.VideoDir</MudInputLabel>
                         <MudDivider Class="video-divider"/>
-                        <MudStack Row="true" Spacing="2" Class="image-strip">
+                        <MudStack Row="true" Spacing="2" Class="title-strip">
                             <MudRating SelectedValue="@video.Evaluate" Size="Size.Large"/>
                             <MudInputLabel class="video-title">@video.Caption</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
@@ -81,7 +81,7 @@
     }
 
     .video-row {
-        height: 100vh;
+        height: 92vh;
         overflow-y: auto;
         padding-left: 10px;
     }
@@ -98,11 +98,17 @@
         padding-left: 10px;
     }
 
-    .image-strip {
+    .title-strip {
         width: 100%;
         overflow: visible;
         display: flex;
         align-items: center;
+    }
+    
+    .image-strip {
+        width: 100%;
+        overflow: visible;
+        display: flex;
     }
 
     /* 针对 MudStack 的内部样式优化 */

@@ -47,9 +47,8 @@
                             {
                                 <div style="flex: 1 1 auto; min-width: 0;">
                                     <MudPaper Elevation="4">
-                                        <img
-                                            src=" @AppsettingsUtils.Default.Api.BaseUrl/@AppsettingsUtils.Default.Api.GetImageApi?name=@img.Path"
-                                            class="image-item"/>
+                                        <MudImage Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetImageApi}?name={img.Path}")" 
+                                                  Class="image-item"></MudImage>
                                     </MudPaper>
                                 </div>
                             }
@@ -126,14 +125,15 @@
         border: 2px solid #ccc;
         border-radius: 8px;
         transition: transform 0.3s ease, box-shadow 0.2s ease;
-        object-fit: cover; /* 确保图片比例不失真 */
+        object-fit: contain; /* 确保图片比例不失真 */
     }
 
     .image-item:hover {
-        transform: scale(2) translateY(20px);
+        transform: scale(1.5) translateY(10px);
         transform-origin: center top;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        border-color: #1976d2;
+        border-color: #ccc;
+        background-color: #222;
         position: relative;
         z-index: 999;
     }

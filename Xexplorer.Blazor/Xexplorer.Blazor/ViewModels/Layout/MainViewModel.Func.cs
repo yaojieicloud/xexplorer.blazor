@@ -72,9 +72,8 @@ public partial class MainViewModel
         var query = new Dictionary<string, string?>
         {
             ["root"] = AppsettingsUtils.Default.Dir.VideoDir, // 设置根目录路径
-            ["dir"] = AppsettingsUtils.Default.Dir.SubDir // 设置子目录路径
+            ["dir"] = string.Empty // 设置子目录路径
         };
-
         // 将查询参数添加到URL中
         string apiUrl = QueryHelpers.AddQueryString(api, query);
 

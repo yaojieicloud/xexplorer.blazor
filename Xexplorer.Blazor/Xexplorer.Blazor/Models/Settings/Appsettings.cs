@@ -55,6 +55,16 @@ public class ApiConf
     /// 获取视频API的属性
     /// </summary>
     public string GetVideosApi { get; set; }
+    
+    /// <summary>
+    /// 获取视频信息的API地址属性
+    /// </summary>
+    public string ParseVideosApi { get; set; }
+    
+    /// <summary>
+    /// 获取密码的API地址属性
+    /// </summary>
+    public string GetPasswordsApi { get; set; }
 }
 
 /// <summary>

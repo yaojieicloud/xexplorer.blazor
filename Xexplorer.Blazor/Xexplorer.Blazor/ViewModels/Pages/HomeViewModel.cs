@@ -66,7 +66,7 @@ public class HomeViewModel : ViewModelBase
         var query = new Dictionary<string, string?>
         {
             ["screen"] = mode == null ? string.Empty : $"{(int)mode.Mode}", // 设置根目录路径
-            ["dir"] = Path.Combine(AppsettingsUtils.Default.Dir.SubDir, dir),
+            ["dir"] = Path.Combine(dir),
             ["keyword"] = keyword
         };
 

@@ -1,9 +1,12 @@
-﻿@using Xexplorer.Blazor.ViewModels.Layout
+﻿@using Xexplorer.Blazor.Utils
+@using Xexplorer.Blazor.ViewModels.Layout
 @using XExplorer.Core.Modes
 @inherits LayoutComponentBase
 @* Required *@
 @inject MainViewModel mainVM
 @inject IJSRuntime JS
+@inject IDialogService DialogService
+
 <MudThemeProvider IsDarkMode="true"/>
 <MudPopoverProvider/>
 
@@ -13,12 +16,13 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider/>
 
+
 <MudLayout>
     <MudAppBar Color="Color.Primary" Dense="false" Fixed="false">
         <MudIconButton Icon="@Icons.Material.Filled.Cottage"
                        Color="Color.Inherit"
                        Edge="Edge.Start"
-                       OnClick="@mainVM.ToggleDrawer"/> 
+                       OnClick="@mainVM.ToggleDrawer"/>
         <MudSpacer/>
         <MudStack Direction="Row" Justify="Justify.FlexEnd" Class="mud-dir">
             <MudSelect T="DirEntry" Label="选择目录" @bind-Value="mainVM.SelectedDir">
@@ -58,32 +62,36 @@
         <MudInputString placeholder="Search..." @bind-Value="mainVM.SelectedKeyword"
                         Style="display: none;"></MudInputString>
         <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit"
-                       Size="Size.Large" OnClick="mainVM.QueryAsync"/>
+                       Size="Size.Large" OnClick="@(async () =>
+                                                  {
+                                                      Scroll("top");
+                                                      await mainVM.QueryAsync();
+                                                  })"/>
         <MudTooltip Text="播放视频">
             <MudIconButton Icon="@Icons.Material.TwoTone.PlayCircle"
                            OnClick="mainVM.BathPlayAsync"
                            Size="Size.Large" Color="Color.Inherit"/>
         </MudTooltip>
         <MudTooltip Text="结束播放">
-            <MudIconButton Icon="@Icons.Material.TwoTone.StopCircle" 
+            <MudIconButton Icon="@Icons.Material.TwoTone.StopCircle"
                            OnClick="mainVM.StopPlayAsync"
                            Size="Size.Large" Color="Color.Inherit"/>
         </MudTooltip>
         <MudInputLabel>|</MudInputLabel>
         <MudTooltip Text="跳转至底部">
-            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp" 
+            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
                            Style="padding-left: 16px;"
                            OnClick="@(() => Scroll("top"))"
                            Size="Size.Medium" Color="Color.Inherit"/>
         </MudTooltip>
         <MudTooltip Text="跳转至中部">
-            <MudIconButton Icon="@Icons.Material.Filled.Compress" 
+            <MudIconButton Icon="@Icons.Material.Filled.Compress"
                            Style="padding-left: 16px;"
                            OnClick="@(() => Scroll("middle"))"
                            Size="Size.Medium" Color="Color.Inherit"/>
         </MudTooltip>
         <MudTooltip Text="跳转至底部">
-            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowDown" 
+            <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowDown"
                            Style="padding-left: 16px;"
                            OnClick="@(() => Scroll("bottom"))"
                            Size="Size.Medium" Color="Color.Inherit"/>
@@ -98,18 +106,22 @@
                     </MudNavLink>
                     <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Counter
                     </MudNavLink>
-                    <MudTooltip Text="解压缩">
-                        <MudIconButton Icon="@Icons.Material.Rounded.FolderZip" 
-                                       Style="padding-left: 16px;"
-                                       OnClick="mainVM.StopPlayAsync"
-                                       Size="Size.Medium" Color="Color.Inherit"/>
-                    </MudTooltip>
-                    <MudTooltip Text="批处理">
-                        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" 
-                                       Style="padding-left: 16px;"
-                                       OnClick="mainVM.StopPlayAsync"
-                                       Size="Size.Medium" Color="Color.Inherit"/>
-                    </MudTooltip>
+                    <MudStack Row="true">
+                        <MudTooltip Text="解压缩">
+                            <MudIconButton Icon="@Icons.Material.Rounded.FolderZip"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.UnzipAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/> 
+                        </MudTooltip>
+                    </MudStack>
+                    <MudStack Row="true">
+                        <MudTooltip Text="批处理">
+                            <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.ParseAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/>
+                        </MudTooltip> 
+                    </MudStack>
                 </MudNavMenu>
             </MudDrawer>
             <MudPaper>
@@ -138,17 +150,25 @@
         scroll: function (elementId, position) {
             const el = document.getElementById(elementId);
             if (!el) return;
-            
+
             if (position === 'top') el.scrollTop = 0;
             else if (position === 'bottom') el.scrollTop = el.scrollHeight;
             else if (position === 'middle') el.scrollTop = el.scrollHeight / 2;
         }
     };
 </script>
-@code { 
+
+@code {
+  
+    protected override void OnInitialized()
+    {
+        DialogUtils.Service = DialogService;
+    } 
+
     private async Task Scroll(string pos)
     {
         // 通过 C# 调用 JS
         await JS.InvokeVoidAsync("scrollUtil.scroll", "main-container", pos);
     }
+
 }

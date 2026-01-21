@@ -87,6 +87,22 @@ public partial class MainViewModel : ViewModelBase
            await DialogUtils.Error(e);
         }
     }
+
+
+    public async Task CalcMd5Async()
+    {
+        try
+        {
+            var caclMd5ApiApi = AppsettingsUtils.Default.Api.CaclMd5Api;
+            var body = new { max_workers = 5 };
+            _http.PostAsJsonAsync(caclMd5ApiApi, body); 
+            await DialogUtils.Info("MD5 计算已提交.");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
+    }
     
     #endregion
 }

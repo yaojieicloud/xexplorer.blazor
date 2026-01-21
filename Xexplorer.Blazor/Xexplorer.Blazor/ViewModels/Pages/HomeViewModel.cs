@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Json;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text.Json;
@@ -105,6 +106,7 @@ public class HomeViewModel : ViewModelBase
             Process.Start(palyer,$"--no-one-instance \"{currPath}\" --loop --rate=2.0{port}");
 #endif
             mode.PlayCount++;
+            await this.SetPlayCount(mode);
             NotifyStateChanged();
         }
         catch (Exception ex)
@@ -124,6 +126,7 @@ public class HomeViewModel : ViewModelBase
         {
             var port = this._mainViewModel.SelectedPort?.Port ?? Random.Shared.Next(50000, 60000);
             await this.AddPlayListOnlyAsync(mode, port);
+            await this.SetPlayCount(mode);
         }
         catch (Exception ex)
         {
@@ -192,6 +195,28 @@ public class HomeViewModel : ViewModelBase
 #endif
 
         await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 异步设置视频的评分值
+    /// </summary>
+    /// <param name="video">要设置评分的视频对象</param>
+    /// <param name="newValue">新的评分值</param>
+    /// <returns>表示异步操作的任务</returns>
+    public async Task SetEvaluateAsync(Video video, int newValue)
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.SetEvaluateApi;
+            var body = new { id = video.Id, value = newValue };
+            var response = await _http.PostAsJsonAsync(api, body); 
+            response.EnsureSuccessStatusCode();
+            await DialogUtils.Info("评分更新成功");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
     }
 
     #region private
@@ -338,5 +363,22 @@ public class HomeViewModel : ViewModelBase
         }
     }
 
+    private async Task<(bool State,string Msg)> SetPlayCount(Video video)
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.SetPlayCountApi;
+            var body = new { id = video.Id };
+            var response = await _http.PostAsJsonAsync(api, body); 
+            response.EnsureSuccessStatusCode();
+            return (State:true, Msg: "播放次数已更新");
+        }
+        catch (Exception exx)
+        {
+            Log.Error($"{exx}");
+            return (State:false, Msg: exx.ToString());
+        }
+    }
+    
     #endregion
 }

@@ -116,9 +116,17 @@
                     </MudStack>
                     <MudStack Row="true">
                         <MudTooltip Text="批处理">
-                            <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor"
+                            <MudIconButton Icon="@Icons.Custom.Brands.Slack"
                                            Style="padding-left: 16px;"
                                            OnClick="mainVM.ParseAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/>
+                        </MudTooltip> 
+                    </MudStack>
+                    <MudStack Row="true">
+                        <MudTooltip Text="MD5计算">
+                            <MudIconButton Icon="@Icons.Material.TwoTone.QrCodeScanner"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.CalcMd5Async"
                                            Size="Size.Medium" Color="Color.Inherit"/>
                         </MudTooltip> 
                     </MudStack>

@@ -12,7 +12,9 @@
                         <MudInputLabel xs="12" class="video-title">@video.VideoDir</MudInputLabel>
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
-                            <MudRating SelectedValue="@video.Evaluate" Size="Size.Large"/>
+                            <MudRating SelectedValue="@video.Evaluate" 
+                                       SelectedValueChanged="@(newValue => homeVM.SetEvaluateAsync(video, newValue))"
+                                       Size="Size.Large"/>
                             <MudInputLabel class="video-title">@video.Caption</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
                             <MudInputLabel class="video-title">@video.Minute 分钟</MudInputLabel>

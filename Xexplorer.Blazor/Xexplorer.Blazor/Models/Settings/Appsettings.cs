@@ -55,31 +55,36 @@ public class ApiConf
     /// 获取视频API的属性
     /// </summary>
     public string GetVideosApi { get; set; }
-    
+
     /// <summary>
     /// 获取视频信息的API地址属性
     /// </summary>
     public string ParseVideosApi { get; set; }
-    
+
     /// <summary>
     /// 获取密码的API地址属性
     /// </summary>
     public string GetPasswordsApi { get; set; }
-    
+
     /// <summary>
     /// 计算MD5 API
     /// </summary>
     public string CaclMd5Api { get; set; }
-    
+
     /// <summary>
     /// 获取视频信息的API地址属性
     /// </summary>
-    public string SetEvaluateApi{ get; set; }
-    
+    public string SetEvaluateApi { get; set; }
+
     /// <summary>
     /// 获取视频信息的API地址属性
     /// </summary>
-    public string SetPlayCountApi{ get; set; }
+    public string SetPlayCountApi { get; set; }
+
+    /// <summary>
+    /// 获取重复文件的API地址属性
+    /// </summary>
+    public string GetDuplicatesApi { get; set; }
 }
 
 /// <summary>

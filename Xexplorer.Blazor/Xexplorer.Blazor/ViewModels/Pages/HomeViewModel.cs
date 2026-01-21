@@ -49,6 +49,7 @@ public class HomeViewModel : ViewModelBase
             this._mainViewModel.OnQuery = QueryAsync;
             this._mainViewModel.OnBathPlay = BathPlayAsync;
             this._mainViewModel.OnStopPlay = StopPlayAsync;
+            this._mainViewModel.OnQueryDuplicates = QueryDuplicatesAsync;
         }
     }
 
@@ -86,6 +87,21 @@ public class HomeViewModel : ViewModelBase
         NotifyStateChanged();
     }
 
+    public async Task QueryDuplicatesAsync()
+    {
+        var api = AppsettingsUtils.Default.Api.GetDuplicatesApi;
+        var json = await _http.GetStringAsync(api);
+        var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
+        if (result?.Code == 200)
+        {
+            this.Videos = result.Data;
+            this.SetImages(this.Videos);
+            this.SetColors(this.Videos);
+        }
+
+        NotifyStateChanged();
+    }
+    
     /// <summary>
     ///     播放指定路径的视频文件。
     /// </summary>
@@ -209,7 +225,7 @@ public class HomeViewModel : ViewModelBase
         {
             var api = AppsettingsUtils.Default.Api.SetEvaluateApi;
             var body = new { id = video.Id, value = newValue };
-            var response = await _http.PostAsJsonAsync(api, body); 
+            var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
             await DialogUtils.Info("评分更新成功");
         }
@@ -218,6 +234,14 @@ public class HomeViewModel : ViewModelBase
             await DialogUtils.Error(e);
         }
     }
+
+    /// <summary>
+    /// 根据传入的颜色参数获取对应的颜色名称或描述
+    /// </summary>
+    /// <param name="labelColor">需要获取名称或描述的颜色对象</param>
+    /// <returns>返回颜色的名称或描述信息</returns>
+    public string GetColor(Color labelColor) =>
+        $"#{(int)(labelColor.Red * 255):X2}{(int)(labelColor.Green * 255):X2}{(int)(labelColor.Blue * 255):X2}";
 
     #region private
 
@@ -228,14 +252,6 @@ public class HomeViewModel : ViewModelBase
     /// </summary>
     /// <param name="path">需要调整的原始路径字符串。</param>
     /// <returns>适配当前操作系统后的路径字符串。</returns>
-    /// <remarks>
-    ///     本方法通过检测当前操作系统类型（如 Windows 或 MacCatalyst），
-    ///     将路径中的卷标和分隔符进行相应替换：
-    ///     - 若当前系统为 MacCatalyst，则将路径中的 Windows 卷标替换为 Mac 卷标，并将路径分隔符从反斜杠 ('\\') 替换为正斜杠 ('/')。
-    ///     - 若当前系统非 MacCatalyst（假定为 Windows），则将路径中的 Mac 卷标替换为 Windows 卷标，并将路径分隔符从正斜杠 ('/') 替换为反斜杠 ('\\')。
-    /// </remarks>
-    /// <example>
-    ///     假设当前系统为 MacCatalyst：
     private string AdjustPath(string path)
     {
         path = Path.Combine(AppsettingsUtils.Default.Dir.Nas, path);
@@ -295,6 +311,18 @@ public class HomeViewModel : ViewModelBase
         }
     }
 
+    private void SetColors(List<Video> videos)
+    {
+        if (!(videos?.Any() ?? false))
+            return;
+
+        foreach (var video in videos)
+        {
+            if (DicColors.Instance.TryGetValue(video?.GroupNo ?? 0, out var color))
+                video.CaptionColor = color;
+        }
+    }
+    
     /// <summary>
     /// 异步添加视频到播放列表（仅添加操作）
     /// </summary>
@@ -363,22 +391,31 @@ public class HomeViewModel : ViewModelBase
         }
     }
 
-    private async Task<(bool State,string Msg)> SetPlayCount(Video video)
+    /// <summary>
+    /// 设置视频播放次数的方法
+    /// </summary>
+    /// <param name="video">需要设置播放次数的视频对象</param>
+    /// <returns>
+    /// 返回一个元组，包含两个元素：
+    /// - State: 布尔值，表示操作是否成功
+    /// - Msg: 字符串，包含操作结果的描述信息
+    /// </returns>
+    private async Task<(bool State, string Msg)> SetPlayCount(Video video)
     {
         try
         {
             var api = AppsettingsUtils.Default.Api.SetPlayCountApi;
             var body = new { id = video.Id };
-            var response = await _http.PostAsJsonAsync(api, body); 
+            var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
-            return (State:true, Msg: "播放次数已更新");
+            return (State: true, Msg: "播放次数已更新");
         }
         catch (Exception exx)
         {
             Log.Error($"{exx}");
-            return (State:false, Msg: exx.ToString());
+            return (State: false, Msg: exx.ToString());
         }
     }
-    
+
     #endregion
 }

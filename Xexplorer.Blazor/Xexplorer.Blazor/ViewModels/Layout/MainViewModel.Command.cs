@@ -64,5 +64,15 @@ public partial class MainViewModel
     /// <returns>返回一个Task对象，表示异步操作的执行</returns>
     public async Task StopPlayAsync() => await this.OnStopPlay?.Invoke();
 
+    /// <summary>
+    /// 定义一个委托属性，用于在查询重复文件时执行的操作
+    /// </summary>
+    public Func<Task> OnQueryDuplicates { get; set; }
+    
+    /// <summary>
+    /// 异步查询重复文件的方法
+    /// </summary>
+    public async Task QueryDuplicatesAsync() => await this.OnQueryDuplicates?.Invoke();
+    
     #endregion
 }

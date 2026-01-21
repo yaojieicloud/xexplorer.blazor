@@ -130,6 +130,14 @@
                                            Size="Size.Medium" Color="Color.Inherit"/>
                         </MudTooltip> 
                     </MudStack>
+                    <MudStack Row="true">
+                        <MudTooltip Text="重复查询">
+                            <MudIconButton Icon="@Icons.Material.Filled.QueryStats"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.QueryDuplicatesAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/>
+                        </MudTooltip> 
+                    </MudStack>
                 </MudNavMenu>
             </MudDrawer>
             <MudPaper>

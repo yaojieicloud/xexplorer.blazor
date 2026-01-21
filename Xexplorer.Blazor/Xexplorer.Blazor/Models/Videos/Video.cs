@@ -134,6 +134,13 @@ public class Video : ModeBase
     /// <summary>
     /// 获取或设置视频所属的分组编号。
     /// </summary>
-    [NotMapped]
+    [JsonPropertyName("group_no")]
+    [JsonProperty("group_no")]
     public int GroupNo { get; set; }
+    
+    /// <summary>
+    /// 获取或设置视频所属的分组编号。
+    /// </summary>
+    [NotMapped]
+    public Color CaptionColor { get; set; } = Colors.Red;
 }

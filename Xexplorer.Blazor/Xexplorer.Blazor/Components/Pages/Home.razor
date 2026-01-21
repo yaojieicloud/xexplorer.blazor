@@ -15,7 +15,7 @@
                             <MudRating SelectedValue="@video.Evaluate" 
                                        SelectedValueChanged="@(newValue => homeVM.SetEvaluateAsync(video, newValue))"
                                        Size="Size.Large"/>
-                            <MudInputLabel class="video-title">@video.Caption</MudInputLabel>
+                            <MudInputLabel class="video-title" Style="@($"color:{homeVM.GetColor(video.CaptionColor)}")">@video.Caption</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
                             <MudInputLabel class="video-title">@video.Minute 分钟</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>

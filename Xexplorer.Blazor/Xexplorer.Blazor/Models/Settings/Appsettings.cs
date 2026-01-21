@@ -65,6 +65,21 @@ public class ApiConf
     /// 获取密码的API地址属性
     /// </summary>
     public string GetPasswordsApi { get; set; }
+    
+    /// <summary>
+    /// 计算MD5 API
+    /// </summary>
+    public string CaclMd5Api { get; set; }
+    
+    /// <summary>
+    /// 获取视频信息的API地址属性
+    /// </summary>
+    public string SetEvaluateApi{ get; set; }
+    
+    /// <summary>
+    /// 获取视频信息的API地址属性
+    /// </summary>
+    public string SetPlayCountApi{ get; set; }
 }
 
 /// <summary>

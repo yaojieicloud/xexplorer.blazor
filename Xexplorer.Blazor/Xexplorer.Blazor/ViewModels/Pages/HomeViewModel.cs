@@ -62,16 +62,21 @@ public class HomeViewModel : ViewModelBase
     /// <returns>返回一个Task对象，表示异步操作</returns>
     public async Task QueryAsync(string dir, string keyword, ScreenMode? mode = null)
     {
+        this.Videos ??= new List<Video>();
+        this.Videos?.Clear();
+        await Task.Delay(400);
+        
         // 构建完整的API请求URL，包含基础URL和获取目录信息的API端点
         var api = AppsettingsUtils.Default.Api.GetVideosApi;
         // 创建查询参数字典，包含根目录路径和子目录路径
         var query = new Dictionary<string, string?>
         {
             ["screen"] = mode == null ? string.Empty : $"{(int)mode.Mode}", // 设置根目录路径
-            ["dir"] = Path.Combine(dir),
+            ["dir"] = dir,
             ["keyword"] = keyword
         };
 
+        
         // 将查询参数添加到URL中
         string apiUrl = QueryHelpers.AddQueryString(api, query);
 
@@ -80,7 +85,10 @@ public class HomeViewModel : ViewModelBase
         var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
         if (result?.Code == 200)
         {
-            this.Videos = result.Data;
+            this.Videos = result.Data
+                ?.OrderByDescending(m=>m.Evaluate)
+                .ThenByDescending(m=>m.PlayCount)
+                .ThenByDescending(m=>m.Id).ToList();
             this.SetImages(this.Videos);
         }
 
@@ -89,6 +97,7 @@ public class HomeViewModel : ViewModelBase
 
     public async Task QueryDuplicatesAsync()
     {
+        
         var api = AppsettingsUtils.Default.Api.GetDuplicatesApi;
         var json = await _http.GetStringAsync(api);
         var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
@@ -101,7 +110,7 @@ public class HomeViewModel : ViewModelBase
 
         NotifyStateChanged();
     }
-    
+
     /// <summary>
     ///     播放指定路径的视频文件。
     /// </summary>
@@ -143,6 +152,7 @@ public class HomeViewModel : ViewModelBase
             var port = this._mainViewModel.SelectedPort?.Port ?? Random.Shared.Next(50000, 60000);
             await this.AddPlayListOnlyAsync(mode, port);
             await this.SetPlayCount(mode);
+            mode.PlayCount++;
         }
         catch (Exception ex)
         {
@@ -224,7 +234,7 @@ public class HomeViewModel : ViewModelBase
         try
         {
             var api = AppsettingsUtils.Default.Api.SetEvaluateApi;
-            var body = new { id = video.Id, value = newValue };
+            var body = new { id = video.Id, evaluate = newValue };
             var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
             await DialogUtils.Info("评分更新成功");
@@ -242,6 +252,59 @@ public class HomeViewModel : ViewModelBase
     /// <returns>返回颜色的名称或描述信息</returns>
     public string GetColor(Color labelColor) =>
         $"#{(int)(labelColor.Red * 255):X2}{(int)(labelColor.Green * 255):X2}{(int)(labelColor.Blue * 255):X2}";
+
+
+    /// <summary>
+    /// 异步删除视频的方法
+    /// </summary>
+    /// <param name="video">要删除的视频对象</param>
+    /// <returns>返回一个Task对象，表示异步操作的执行状态</returns>
+    public async Task DeleteVideoAsync(Video video)
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.DeleteVideoApi;
+            var body = new { id = video.Id };
+            var response = await _http.PostAsJsonAsync(api, body);
+            response.EnsureSuccessStatusCode();
+            this.Videos.Remove(video);
+            await DialogUtils.Info($"视频[{video.Caption}]已删除!");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
+    }
+
+    /// <summary>
+    /// 重置视频的异步方法
+    /// </summary>
+    /// <param name="video">要重置的视频对象</param>
+    /// <returns>一个表示异步操作的任务对象</returns>
+    public async Task ResetVideoAsync(Video video)
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.ResetVideoApi;
+            var body = new { id = video.Id };
+            var response = await _http.PostAsJsonAsync(api, body);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Result<Video>>(json);
+            if (result?.Code == 200)
+            {
+                if (result.Data?.Snapshots?.Any() ?? false)
+                    video.Snapshots = result.Data.Snapshots;
+                
+            }
+            
+            await DialogUtils.Info($"视频[{video.Caption}]已重置!");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
+    }
 
     #region private
 
@@ -311,6 +374,10 @@ public class HomeViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// 设置视频列表的颜色属性
+    /// </summary>
+    /// <param name="videos">视频对象列表，用于设置颜色</param>
     private void SetColors(List<Video> videos)
     {
         if (!(videos?.Any() ?? false))
@@ -322,7 +389,7 @@ public class HomeViewModel : ViewModelBase
                 video.CaptionColor = color;
         }
     }
-    
+
     /// <summary>
     /// 异步添加视频到播放列表（仅添加操作）
     /// </summary>

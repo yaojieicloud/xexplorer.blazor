@@ -12,18 +12,23 @@
                         <MudInputLabel xs="12" class="video-title">@video.VideoDir</MudInputLabel>
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
-                            <MudRating SelectedValue="@video.Evaluate" 
+                            <MudTooltip Text="@video.Caption">
+                                <MudInputLabel class="video-title" Style="@($"color:{homeVM.GetColor(video.CaptionColor)}")">@video.Caption</MudInputLabel>
+                            </MudTooltip>
+                        </MudStack>
+                        <MudDivider Class="video-divider"/>
+                        <MudStack Row="true" Spacing="2" Class="title-strip">
+                            <MudRating SelectedValue="@video.Evaluate" Style="padding-left: 10px"
                                        SelectedValueChanged="@(newValue => homeVM.SetEvaluateAsync(video, newValue))"
                                        Size="Size.Large"/>
-                            <MudInputLabel class="video-title" Style="@($"color:{homeVM.GetColor(video.CaptionColor)}")">@video.Caption</MudInputLabel>
-                            <MudInputLabel class="video-title">==</MudInputLabel>
+                            <MudSpacer/>
                             <MudInputLabel class="video-title">@video.Minute 分钟</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
                             <MudInputLabel class="video-title">@video.Length MB</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
                             <MudInputLabel class="video-title">@video.Width x @video.Height</MudInputLabel>
                             <MudInputLabel class="video-title">==</MudInputLabel>
-                            <MudInputLabel class="video-title">@video.ModifyTime</MudInputLabel>
+                            <MudInputLabel class="video-title">@video.ModifyTime?.ToString("yyyy-MM-dd")</MudInputLabel>
                         </MudStack>
                     </MudPaper>
                 </MudItem>
@@ -40,8 +45,8 @@
                                             <MudButton OnClick="() => homeVM.PlayAsync(video)">播放</MudButton>
                                         </MudBadge>
                                         <MudButton OnClick="()=>homeVM.AddPlayListAsync(video)">加入</MudButton>
-                                        <MudButton>删除</MudButton>
-                                        <MudButton>重置</MudButton>
+                                        <MudButton OnClick="()=>homeVM.DeleteVideoAsync(video)">删除</MudButton>
+                                        <MudButton OnClick="()=>homeVM.ResetVideoAsync(video)">重置</MudButton>
                                     </MudButtonGroup>
                                 </MudPaper>
                             </div>
@@ -131,7 +136,7 @@
     }
 
     .image-item:hover {
-        transform: scale(1.5) translateY(10px);
+        transform: scale(1.1) translateY(1px);
         transform-origin: center top;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         border-color: #ccc;

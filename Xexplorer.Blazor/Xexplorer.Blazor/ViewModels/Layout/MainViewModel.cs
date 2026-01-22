@@ -46,6 +46,12 @@ public partial class MainViewModel : ViewModelBase
     {
         try
         {
+            if (this.SelectedDir == null)
+            {
+                await DialogUtils.Warning("请选择一个目录");
+                return;
+            }
+            
             var dir = this.SelectedDir?.Name;
             var api = AppsettingsUtils.Default.Api.ParseVideosApi;
             // 创建查询参数字典，包含根目录路径和子目录路径
@@ -67,6 +73,12 @@ public partial class MainViewModel : ViewModelBase
     {
         try
         {
+            if (this.SelectedDir == null)
+            {
+                await DialogUtils.Warning("请选择一个目录");
+                return;
+            }
+            
             var pwdApi = AppsettingsUtils.Default.Api.GetPasswordsApi;
             var unzipApi = AppsettingsUtils.Default.Api.UnZipApi;
             var pwds = await _http.GetFromJsonAsync<string[]>(pwdApi);
@@ -88,14 +100,20 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
-
+    /// <summary>
+    /// 异步计算MD5值的异步方法
+    /// </summary>
+    /// <returns>
+    /// 返回一个Task对象，表示异步操作的执行状态
+    /// 该Task在完成时将包含计算得到的MD5哈希值
+    /// </returns>
     public async Task CalcMd5Async()
     {
         try
         {
             var caclMd5ApiApi = AppsettingsUtils.Default.Api.CaclMd5Api;
             var body = new { max_workers = 5 };
-            _http.PostAsJsonAsync(caclMd5ApiApi, body); 
+            await _http.PostAsJsonAsync(caclMd5ApiApi, body); 
             await DialogUtils.Info("MD5 计算已提交.");
         }
         catch (Exception e)

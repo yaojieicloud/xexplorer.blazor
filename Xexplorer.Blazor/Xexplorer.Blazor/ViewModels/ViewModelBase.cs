@@ -22,6 +22,6 @@ public class ViewModelBase
     /// </summary>
     public ViewModelBase()
     {
-        this._http = new HttpClient() { BaseAddress = new Uri(AppsettingsUtils.Default.Api.BaseUrl) ,Timeout = TimeSpan.FromMinutes(120) };
+        this._http = new HttpClient() { BaseAddress = new Uri(AppsettingsUtils.Default.Api.BaseUrl) ,Timeout = TimeSpan.FromHours(5) };
     }
 }

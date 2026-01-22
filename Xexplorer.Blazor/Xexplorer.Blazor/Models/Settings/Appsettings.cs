@@ -85,6 +85,23 @@ public class ApiConf
     /// 获取重复文件的API地址属性
     /// </summary>
     public string GetDuplicatesApi { get; set; }
+
+    /// <summary>
+    /// 删除视频API的属性
+    /// </summary>
+    /// <remarks>
+    /// 用于存储删除视频相关的API接口地址
+    /// </remarks>
+    public string DeleteVideoApi { get; set; }
+
+
+    /// <summary>
+    /// 重置视频API的属性
+    /// </summary>
+    /// <remarks>
+    /// 该属性用于获取或设置重置视频API的相关信息
+    /// </remarks>
+    public string ResetVideoApi { get; set; }
 }
 
 /// <summary>

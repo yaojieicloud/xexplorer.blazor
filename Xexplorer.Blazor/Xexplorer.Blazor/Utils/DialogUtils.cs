@@ -9,6 +9,7 @@ namespace Xexplorer.Blazor.Utils;
 public class DialogUtils
 {
     public static IDialogService Service { get; set; }
+    public static bool Visible { get; set; }
 
     public static async Task<DialogResult> Info(string msg,
         string title = "提示",

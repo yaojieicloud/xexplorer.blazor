@@ -62,53 +62,80 @@ public class HomeViewModel : ViewModelBase
     /// <returns>返回一个Task对象，表示异步操作</returns>
     public async Task QueryAsync(string dir, string keyword, ScreenMode? mode = null)
     {
-        this.Videos ??= new List<Video>();
-        this.Videos?.Clear();
-        await Task.Delay(400);
-        
-        // 构建完整的API请求URL，包含基础URL和获取目录信息的API端点
-        var api = AppsettingsUtils.Default.Api.GetVideosApi;
-        // 创建查询参数字典，包含根目录路径和子目录路径
-        var query = new Dictionary<string, string?>
+        DialogUtils.Visible = true;
+        try
         {
-            ["screen"] = mode == null ? string.Empty : $"{(int)mode.Mode}", // 设置根目录路径
-            ["dir"] = dir,
-            ["keyword"] = keyword
-        };
+            this.Videos ??= new List<Video>();
+            this.Videos?.Clear();
+            await Task.Delay(400);
 
-        
-        // 将查询参数添加到URL中
-        string apiUrl = QueryHelpers.AddQueryString(api, query);
+            // 构建完整的API请求URL，包含基础URL和获取目录信息的API端点
+            var api = AppsettingsUtils.Default.Api.GetVideosApi;
+            // 创建查询参数字典，包含根目录路径和子目录路径
+            var query = new Dictionary<string, string?>
+            {
+                ["screen"] = mode == null ? string.Empty : $"{(int)mode.Mode}", // 设置根目录路径
+                ["dir"] = dir,
+                ["keyword"] = keyword
+            };
 
-        // 发送HTTP GET请求并获取响应结果，将结果反序列化为DirEntry对象列表
-        var json = await _http.GetStringAsync(apiUrl);
-        var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
-        if (result?.Code == 200)
-        {
-            this.Videos = result.Data
-                ?.OrderByDescending(m=>m.Evaluate)
-                .ThenByDescending(m=>m.PlayCount)
-                .ThenByDescending(m=>m.Id).ToList();
-            this.SetImages(this.Videos);
+
+            // 将查询参数添加到URL中
+            string apiUrl = QueryHelpers.AddQueryString(api, query);
+
+            // 发送HTTP GET请求并获取响应结果，将结果反序列化为DirEntry对象列表
+            var json = await _http.GetStringAsync(apiUrl);
+            var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
+            if (result?.Code == 200)
+            {
+                this.Videos = result.Data
+                    ?.OrderByDescending(m => m.Evaluate)
+                    .ThenByDescending(m => m.PlayCount)
+                    .ThenByDescending(m => m.Id).ToList();
+                this.SetImages(this.Videos);
+            }
+
+            NotifyStateChanged();
+            SnackbarUtils.Success($"视频查询完成!");
         }
-
-        NotifyStateChanged();
+        catch (Exception e)
+        {
+            Log.Error(e, "查询视频失败");
+            DialogUtils.Error(e, $"查询视频失败：{e.Message}");
+        }
+        finally
+        {
+            DialogUtils.Visible = false;
+        }
     }
 
     public async Task QueryDuplicatesAsync()
     {
-        
-        var api = AppsettingsUtils.Default.Api.GetDuplicatesApi;
-        var json = await _http.GetStringAsync(api);
-        var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
-        if (result?.Code == 200)
+        DialogUtils.Visible = true;
+        try
         {
-            this.Videos = result.Data;
-            this.SetImages(this.Videos);
-            this.SetColors(this.Videos);
-        }
+            var api = AppsettingsUtils.Default.Api.GetDuplicatesApi;
+            var json = await _http.GetStringAsync(api);
+            var result = JsonConvert.DeserializeObject<Result<List<Video>>>(json);
+            if (result?.Code == 200)
+            {
+                this.Videos = result.Data;
+                this.SetImages(this.Videos);
+                this.SetColors(this.Videos);
+            }
 
-        NotifyStateChanged();
+            NotifyStateChanged();
+            SnackbarUtils.Success($"视频查询完成!");
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "查询视频失败");
+            DialogUtils.Error(e, $"查询视频失败：{e.Message}");
+        }
+        finally
+        {
+            DialogUtils.Visible = false;
+        }
     }
 
     /// <summary>
@@ -153,6 +180,7 @@ public class HomeViewModel : ViewModelBase
             await this.AddPlayListOnlyAsync(mode, port);
             await this.SetPlayCount(mode);
             mode.PlayCount++;
+            SnackbarUtils.Success($"视频[{mode.Caption}]已添加到播放列表!");
         }
         catch (Exception ex)
         {
@@ -237,7 +265,7 @@ public class HomeViewModel : ViewModelBase
             var body = new { id = video.Id, evaluate = newValue };
             var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
-            await DialogUtils.Info("评分更新成功");
+            SnackbarUtils.Success($"视频[{video.Caption}]已评分!");
         }
         catch (Exception e)
         {
@@ -268,7 +296,7 @@ public class HomeViewModel : ViewModelBase
             var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
             this.Videos.Remove(video);
-            await DialogUtils.Info($"视频[{video.Caption}]已删除!");
+            SnackbarUtils.Success($"视频[{video.Caption}]已删除!");
         }
         catch (Exception e)
         {
@@ -295,10 +323,9 @@ public class HomeViewModel : ViewModelBase
             {
                 if (result.Data?.Snapshots?.Any() ?? false)
                     video.Snapshots = result.Data.Snapshots;
-                
             }
-            
-            await DialogUtils.Info($"视频[{video.Caption}]已重置!");
+
+            SnackbarUtils.Success($"视频[{video.Caption}]已重置!");
         }
         catch (Exception e)
         {

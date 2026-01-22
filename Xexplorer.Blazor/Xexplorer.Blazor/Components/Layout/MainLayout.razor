@@ -6,6 +6,7 @@
 @inject MainViewModel mainVM
 @inject IJSRuntime JS
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <MudThemeProvider IsDarkMode="true"/>
 <MudPopoverProvider/>
@@ -144,6 +145,9 @@
                 @Body
             </MudPaper>
         </MudDrawerContainer>
+        <MudOverlay Visible="@DialogUtils.Visible" DarkBackground="true" Absolute="true">
+            <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        </MudOverlay>
     </MudPaper>
 </MudLayout>
 <style>
@@ -179,6 +183,7 @@
     protected override void OnInitialized()
     {
         DialogUtils.Service = DialogService;
+        SnackbarUtils.Snackbar = Snackbar;
     } 
 
     private async Task Scroll(string pos)

@@ -61,7 +61,7 @@ public partial class MainViewModel : ViewModelBase
             var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
             await this.QueryAsync();
-            DialogUtils.Info("解析完成");
+            SnackbarUtils.Success($"解析完成!");
         }
         catch (Exception e)
         {
@@ -114,7 +114,7 @@ public partial class MainViewModel : ViewModelBase
             var caclMd5ApiApi = AppsettingsUtils.Default.Api.CaclMd5Api;
             var body = new { max_workers = 5 };
             await _http.PostAsJsonAsync(caclMd5ApiApi, body); 
-            await DialogUtils.Info("MD5 计算已提交.");
+            await DialogUtils.Info("MD5 计算已完成.");
         }
         catch (Exception e)
         {

@@ -4,7 +4,7 @@
 @inject HomeViewModel homeVM
 
 <div class="video-row" id="main-container">
-    <Virtualize Items="@homeVM.Videos" ItemSize="350" Context="video">
+    <Virtualize Items="@homeVM.Videos" ItemSize="460" Context="video">
         <MudPaper Elevation="1" Class="pa-4 video-row-border">
             <MudGrid>
                 <MudItem xs="12">
@@ -13,7 +13,8 @@
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
                             <MudTooltip Text="@video.Caption">
-                                <MudInputLabel class="video-title" Style="@($"color:{homeVM.GetColor(video.CaptionColor)}")">@video.Caption</MudInputLabel>
+                                <MudInputLabel class="video-title"
+                                               Style="@($"color:{homeVM.GetColor(video.CaptionColor)}")">@video.Caption</MudInputLabel>
                             </MudTooltip>
                         </MudStack>
                         <MudDivider Class="video-divider"/>
@@ -54,8 +55,11 @@
                             {
                                 <div style="flex: 1 1 auto; min-width: 0;">
                                     <MudPaper Elevation="4">
-                                        <MudImage Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetImageApi}?name={img.Path}")" 
-                                                  Class="image-item"></MudImage>
+                                        <MudImage
+                                            Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetImageApi}?name={img.Path}")"
+                                            Class="image-item" ObjectPosition="ObjectPosition.Center"
+                                            ObjectFit="ObjectFit.Cover"
+                                            @onclick="() => homeVM.ShowCarouselAsync(video)"></MudImage>
                                     </MudPaper>
                                 </div>
                             }
@@ -66,7 +70,8 @@
         </MudPaper>
     </Virtualize>
 </div>
-@code { 
+
+@code {
 
     protected override void OnInitialized()
     {
@@ -85,16 +90,18 @@
         margin-right: 10px;
     }
 
+    .video-row-border {
+        border: 1px solid #999;
+        height: 460px; /* 固定高度 */
+        overflow: hidden;
+    }
+
     .video-row {
         height: 92vh;
         overflow-y: auto;
         padding-left: 10px;
     }
-
-    .video-row-border {
-        border: 1px solid #999;
-    }
-
+ 
     .video-title {
         font-family: 'AlimamaThin';
         font-weight: normal;
@@ -110,7 +117,7 @@
         display: flex;
         align-items: center;
     }
-    
+
     .image-strip {
         width: 100%;
         overflow: visible;
@@ -120,19 +127,17 @@
     /* 针对 MudStack 的内部样式优化 */
     .image-strip .mud-stack {
         display: inline-flex; /* 配合父级的 nowrap */
-        flex-wrap: nowrap; /* 禁止 MudStack 换行 */        
+        flex-wrap: nowrap; /* 禁止 MudStack 换行 */
     }
 
     .image-item {
         display: block;
         width: 100%;
-        height: auto;
-        /*max-width: 300px;*/
+        height: 300px;
         max-height: 300px;
         border: 2px solid #ccc;
         border-radius: 8px;
         transition: transform 0.3s ease, box-shadow 0.2s ease;
-        object-fit: contain; /* 确保图片比例不失真 */
     }
 
     .image-item:hover {

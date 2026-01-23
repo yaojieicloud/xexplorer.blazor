@@ -71,4 +71,17 @@ public class DialogUtils
         return await Info(msg, title, color, okBtnText, cancelBtnText, isShowOkButton, isShowCancelButton, maxWidth,
             fullWidth);
     }
+
+    public static async Task<DialogResult> Carousel(List<string> imags)
+    {
+        var parameters = new DialogParameters<DialogCarousel>
+        {
+            { x => x.Snapshots , imags},
+        };
+
+        var options = new DialogOptions() { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+
+        var reference = await Service.ShowAsync<DialogCarousel>(null, parameters, options);
+        return await reference?.Result ?? DialogResult.Cancel();
+    }
 }

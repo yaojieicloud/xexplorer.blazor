@@ -46,6 +46,7 @@
                                             <MudButton OnClick="() => homeVM.PlayAsync(video)">播放</MudButton>
                                         </MudBadge>
                                         <MudButton OnClick="()=>homeVM.AddPlayListAsync(video)">加入</MudButton>
+                                        <MudButton OnClick="()=>homeVM.OpenFolder(video)">目录</MudButton>
                                         <MudButton OnClick="()=>homeVM.DeleteVideoAsync(video)">删除</MudButton>
                                         <MudButton OnClick="()=>homeVM.ResetVideoAsync(video)">重置</MudButton>
                                     </MudButtonGroup>

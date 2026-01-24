@@ -81,5 +81,6 @@ public partial class MainViewModel
         var json = await _http.GetStringAsync(apiUrl);
         var result = JsonSerializer.Deserialize<Result<List<DirEntry>>>(json);
         this.Dirs = result?.Data ?? new();
+        this.Dirs.Insert(0, new DirEntry { Name = "", Path = string.Empty });
     }
 }

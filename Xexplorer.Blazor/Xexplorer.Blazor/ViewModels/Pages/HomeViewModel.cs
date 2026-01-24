@@ -346,6 +346,17 @@ public class HomeViewModel : ViewModelBase
         var snapshots = video.Snapshots.Select(m => m.Path).ToList();
         await DialogUtils.Carousel(snapshots);
     }
+
+    public void OpenFolder(Video video)
+    {
+        var path = Path.Combine(AppsettingsUtils.Default.Dir.Nas, video.VideoPath);
+        var folderPath = Path.GetDirectoryName(path);
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = folderPath,
+            UseShellExecute = true
+        });
+    }
     
     #region private
 

@@ -33,8 +33,13 @@ public partial class MainViewModel
     /// - 当前选定的模式
     /// 使用null条件运算符确保在OnQuery为null时不会引发异常
     /// </remarks>
-    public async Task QueryAsync() =>
-        await this.OnQuery?.Invoke(this.SelectedDir?.Name, this.SelectedKeyword, this.SelectedMode);
+    public async Task QueryAsync()
+    {
+        if (this.IsRootPage)
+            await this.OnQuery?.Invoke(this.SelectedDir?.Name, this.SelectedKeyword, this.SelectedMode);
+        else 
+            await this.OnQueryImages?.Invoke(this.SelectedDir?.Name);
+    }
 
 
     /// <summary>
@@ -73,6 +78,24 @@ public partial class MainViewModel
     /// 异步查询重复文件的方法
     /// </summary>
     public async Task QueryDuplicatesAsync() => await this.OnQueryDuplicates?.Invoke();
+
+    /// <summary>
+    /// 定义一个图像查询事件委托，用于处理图像查询操作
+    /// </summary>
+    /// <remarks>
+    /// 该委托表示一个异步操作，当设置时，可以通过调用它来触发图像相关的查询逻辑。
+    /// </remarks>
+    public Func<string,Task> OnQueryImages { get; set; }
+
+    /// <summary>
+    /// 异步查询图像的方法
+    /// </summary>
+    /// <remarks>
+    /// 此方法会检查OnQueryImages委托是否有值，如果有，则调用该委托进行操作。
+    /// 使用null条件运算符确保在OnQueryImages为null时不会引发异常。
+    /// </remarks>
+    /// <returns>返回一个Task对象，表示异步操作的执行</returns>
+    public async Task QueryImagesAsync(string dir = null) => await this.OnQueryImages?.Invoke(dir);
     
     #endregion
 }

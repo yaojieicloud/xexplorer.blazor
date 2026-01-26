@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using XExplorer.Core.Modes;
 
 namespace Xexplorer.Blazor.ViewModels.Layout;
@@ -85,6 +86,8 @@ public partial class MainViewModel
 
     #region Properties
 
+    private readonly NavigationManager _navManager;
+    
     /// <summary>
     /// 获取或设置打开状态
     /// 当值改变时会触发状态变更通知
@@ -171,5 +174,20 @@ public partial class MainViewModel
     /// </summary>
     public IEnumerable<string> SelectedKeywords = new HashSet<string>();
 
+    /// <summary>
+    /// 当前路径属性
+    /// </summary>
+    public string CurrentPath => new Uri(_navManager.Uri).AbsolutePath; 
+    
+    /// <summary>
+    /// 是否为图片页面
+    /// </summary>
+    public bool IsImagesPage => CurrentPath.Equals("/images", StringComparison.OrdinalIgnoreCase); 
+    
+    /// <summary>
+    /// 是否为视频页面
+    /// </summary>
+    public bool IsRootPage => CurrentPath.Equals("/", StringComparison.OrdinalIgnoreCase);
+    
     #endregion
 }

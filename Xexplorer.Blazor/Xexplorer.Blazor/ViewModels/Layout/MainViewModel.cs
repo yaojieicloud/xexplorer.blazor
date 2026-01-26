@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Xexplorer.Blazor.Utils;
 using XExplorer.Core.Modes;
@@ -16,10 +17,12 @@ namespace Xexplorer.Blazor.ViewModels.Layout;
 public partial class MainViewModel : ViewModelBase
 {
     /// <summary>
-    /// 主视图模型的构造函数
+    /// 构造函数
     /// </summary>
-    public MainViewModel()
+    /// <param name="navManager">导航管理</param>
+    public MainViewModel(NavigationManager navManager)
     {
+        this._navManager = navManager;
         this.InitDirsAsync();
         this.InItPorts();
         this.InitScrenn();
@@ -51,7 +54,7 @@ public partial class MainViewModel : ViewModelBase
                 await DialogUtils.Warning("请选择一个目录");
                 return;
             }
-            
+
             var dir = this.SelectedDir?.Name;
             var api = AppsettingsUtils.Default.Api.ParseVideosApi;
             // 创建查询参数字典，包含根目录路径和子目录路径
@@ -78,7 +81,7 @@ public partial class MainViewModel : ViewModelBase
                 await DialogUtils.Warning("请选择一个目录");
                 return;
             }
-            
+
             var pwdApi = AppsettingsUtils.Default.Api.GetPasswordsApi;
             var unzipApi = AppsettingsUtils.Default.Api.UnZipApi;
             var pwds = await _http.GetFromJsonAsync<string[]>(pwdApi);
@@ -96,7 +99,7 @@ public partial class MainViewModel : ViewModelBase
         }
         catch (Exception e)
         {
-           await DialogUtils.Error(e);
+            await DialogUtils.Error(e);
         }
     }
 
@@ -113,7 +116,7 @@ public partial class MainViewModel : ViewModelBase
         {
             var caclMd5ApiApi = AppsettingsUtils.Default.Api.CaclMd5Api;
             var body = new { max_workers = 5 };
-            await _http.PostAsJsonAsync(caclMd5ApiApi, body); 
+            await _http.PostAsJsonAsync(caclMd5ApiApi, body);
             await DialogUtils.Info("MD5 计算已完成.");
         }
         catch (Exception e)
@@ -121,6 +124,51 @@ public partial class MainViewModel : ViewModelBase
             await DialogUtils.Error(e);
         }
     }
-    
+
+
+    /// <summary>
+    /// 异步清理文件夹的方法
+    /// </summary>
+    /// <returns>返回一个Task对象，代表异步操作</returns>
+    public async Task FolderCleanAsync()
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.FolderCleanAPI;
+            if (this.SelectedDir == null || string.IsNullOrWhiteSpace(this.SelectedDir.Name))
+            {
+                SnackbarUtils.Warning("请先选择一个文件夹");
+                return;
+            }
+
+            var body = new { dir = this.SelectedDir.Name };
+            await _http.PostAsJsonAsync(api, body);
+            await DialogUtils.Info($"文件夹 [{this.SelectedDir.Name}] 资源清理完成.");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
+    }
+
+    /// <summary>
+    /// 异步清理快照的方法
+    /// </summary>
+    /// <returns>返回一个Task对象，表示异步操作的完成</returns>
+    public async Task SnapshotsCleanAsync()
+    {
+        try
+        {
+            var api = AppsettingsUtils.Default.Api.SnapshotsCleanApi;
+            var body = new { dir = string.Empty };
+            await _http.PostAsJsonAsync(api, body);
+            await DialogUtils.Info($"视频快照资源清理完成.");
+        }
+        catch (Exception e)
+        {
+            await DialogUtils.Error(e);
+        }
+    }
+
     #endregion
 }

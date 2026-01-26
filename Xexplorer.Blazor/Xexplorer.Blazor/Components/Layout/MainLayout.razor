@@ -105,7 +105,7 @@
                 <MudNavMenu>
                     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Home
                     </MudNavLink>
-                    <MudNavLink Href="/counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Counter
+                    <MudNavLink Href="/images" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.ImageSearch">Counter
                     </MudNavLink>
                     <MudStack Row="true">
                         <MudTooltip Text="解压缩">
@@ -136,6 +136,22 @@
                             <MudIconButton Icon="@Icons.Material.Filled.QueryStats"
                                            Style="padding-left: 16px;"
                                            OnClick="mainVM.QueryDuplicatesAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/>
+                        </MudTooltip> 
+                    </MudStack>
+                    <MudStack Row="true">
+                        <MudTooltip Text="清理资源">
+                            <MudIconButton Icon="@Icons.Material.Filled.LayersClear"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.FolderCleanAsync"
+                                           Size="Size.Medium" Color="Color.Inherit"/>
+                        </MudTooltip> 
+                    </MudStack>
+                    <MudStack Row="true">
+                        <MudTooltip Text="快照清理">
+                            <MudIconButton Icon="@Icons.Material.TwoTone.AutoDelete"
+                                           Style="padding-left: 16px;"
+                                           OnClick="mainVM.SnapshotsCleanAsync"
                                            Size="Size.Medium" Color="Color.Inherit"/>
                         </MudTooltip> 
                     </MudStack>

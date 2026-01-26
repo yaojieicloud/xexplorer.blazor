@@ -72,11 +72,12 @@ public class DialogUtils
             fullWidth);
     }
 
-    public static async Task<DialogResult> Carousel(List<string> imags)
+    public static async Task<DialogResult> Carousel(List<string> imags,string api = null)
     {
         var parameters = new DialogParameters<DialogCarousel>
         {
             { x => x.Snapshots , imags},
+            {x => x.Api , api }
         };
 
         var options = new DialogOptions() { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.Large };

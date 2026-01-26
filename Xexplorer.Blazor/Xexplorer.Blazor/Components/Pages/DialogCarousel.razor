@@ -9,7 +9,7 @@
             {
                 <MudCarouselItem>
                     <MudPaper Class="image-paper">
-                        <MudImage Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetImageApi}?name={img}")"
+                        <MudImage Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{Api}?name={img}")"
                                   ObjectFit="ObjectFit.Contain"
                                   Class="image-item-max"></MudImage>
                     </MudPaper>
@@ -43,7 +43,11 @@
     }
 </style>
 @code {
-    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] 
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string Api { get; set; } = AppsettingsUtils.Default.Api.GetImageApi;
 
     [Parameter]
     public List<string> Snapshots { get; set; } = new(); 

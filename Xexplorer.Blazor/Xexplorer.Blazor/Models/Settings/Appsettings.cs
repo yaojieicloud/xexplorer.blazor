@@ -102,6 +102,26 @@ public class ApiConf
     /// 该属性用于获取或设置重置视频API的相关信息
     /// </remarks>
     public string ResetVideoApi { get; set; }
+    
+    /// <summary>
+    /// 文件夹清理API的属性
+    /// </summary>
+    public string FolderCleanAPI{ get; set; }
+    
+    /// <summary>
+    /// 视频快照清理API的属性
+    /// </summary>
+    public string SnapshotsCleanApi { get; set; }
+    
+    /// <summary>
+    /// 获取视频原始图片的API地址属性
+    /// </summary>
+    public string GetImagesApi { get; set; }
+    
+    /// <summary>
+    /// 获取视频原始图片的API地址属性
+    /// </summary>
+    public string GetPicApi { get; set; }
 }
 
 /// <summary>

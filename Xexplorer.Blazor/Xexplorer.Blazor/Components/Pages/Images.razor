@@ -1,0 +1,75 @@
+﻿@page "/images"
+@using Xexplorer.Blazor.Utils
+@using Xexplorer.Blazor.ViewModels.Pages
+@inject ImagesViewModel vm
+
+<div class="main-container" id="main-container">
+    <MudPaper Class="d-flex flex-wrap">
+        @* <Virtualize Items="@vm.Images" ItemSize="400" Context="img"> *@
+        @*     <MudPaper> *@
+        @*         <MudImage *@
+        @*             Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetImageApi}?name={img}")" *@
+        @*             Class="image-item" *@
+        @*             FallbackSrc="https://cyberdefender.hk/en-us/wp-content/uploads/2021/07/404-01-scaled.jpg"/> *@
+        @*     </MudPaper> *@
+        @* </Virtualize> *@
+        @foreach (var img in vm.Images)
+        {
+            <MudPaper>
+                <MudImage
+                    Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetPicApi}?name={img}")"
+                    Class="image-item"
+                    FallbackSrc="https://cyberdefender.hk/en-us/wp-content/uploads/2021/07/404-01-scaled.jpg"
+                    @onclick="() => vm.ShowCarouselAsync(img)"/>
+            </MudPaper>
+        }
+    </MudPaper>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        vm.OnChange += StateHasChanged;
+    }
+
+}
+
+<style>
+    .main-container {
+        height: 92vh;
+        overflow-y: auto;
+        padding-left: 10px;
+    }
+
+    .d-flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* 或者 space-around / center */
+    }
+
+    .image-item {
+        width: 400px;
+        height: 400px;
+        max-height: 400px;
+        max-width: 400px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        transition: transform 0.3s ease, box-shadow 0.2s ease;
+    }
+
+    .image-item:hover {
+        transform: scale(1.1) translateY(1px);
+        transform-origin: center top;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-color: #ccc;
+        background-color: #222;
+        position: relative;
+        z-index: 999;
+    }
+</style>

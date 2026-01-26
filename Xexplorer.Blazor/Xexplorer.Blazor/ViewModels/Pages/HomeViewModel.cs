@@ -344,7 +344,7 @@ public class HomeViewModel : ViewModelBase
     public async Task ShowCarouselAsync(Video video)
     { 
         var snapshots = video.Snapshots.Select(m => m.Path).ToList();
-        await DialogUtils.Carousel(snapshots);
+        await DialogUtils.Carousel(snapshots,AppsettingsUtils.Default.Api.GetImageApi);
     }
 
     public void OpenFolder(Video video)

@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.NetworkInformation;
-using System.Reflection; 
-using Microsoft.AspNetCore.WebUtilities; 
+using System.Reflection;
+using Microsoft.AspNetCore.WebUtilities;
+using MudBlazor;
 using Newtonsoft.Json;
 using Serilog;
 using Xexplorer.Blazor.Utils;
@@ -22,7 +23,7 @@ namespace Xexplorer.Blazor.ViewModels.Pages;
 public class HomeViewModel : ViewModelBase
 {
     private List<Video> _videos = new();
- 
+
     /// <summary>
     /// 私有字段，用于存储主视图模型(MainViewModel)的实例
     /// </summary>
@@ -187,7 +188,7 @@ public class HomeViewModel : ViewModelBase
             Log.Error(ex, $"{MethodBase.GetCurrentMethod().Name} Is Error");
         }
     }
-    
+
     /// <summary>
     /// 异步执行洗澡操作的方法
     /// </summary>
@@ -342,9 +343,9 @@ public class HomeViewModel : ViewModelBase
     /// <param name="video">要展示的视频对象，包含视频相关信息</param>
     /// <returns>一个表示异步操作的任务</returns>
     public async Task ShowCarouselAsync(Video video)
-    { 
+    {
         var snapshots = video.Snapshots.Select(m => m.Path).ToList();
-        await DialogUtils.Carousel(snapshots,AppsettingsUtils.Default.Api.GetImageApi);
+        await DialogUtils.Carousel(snapshots, AppsettingsUtils.Default.Api.GetImageApi);
     }
 
     public void OpenFolder(Video video)
@@ -357,7 +358,15 @@ public class HomeViewModel : ViewModelBase
             UseShellExecute = true
         });
     }
-    
+
+    /// <summary>
+    /// 根据给定的路径获取面包屑导航项列表
+    /// </summary>
+    /// <param name="path">要生成面包屑导航的路径字符串</param>
+    /// <returns>返回包含面包屑导航项的列表</returns>
+    public List<BreadcrumbItem> GetBreadcrumbs(string path) =>
+        path.Split('/').Select(m => new BreadcrumbItem(m, null)).ToList();
+
     #region private
 
     /// <summary>

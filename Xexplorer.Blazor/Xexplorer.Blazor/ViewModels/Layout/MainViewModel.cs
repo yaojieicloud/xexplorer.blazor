@@ -1,12 +1,7 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Xexplorer.Blazor.Utils;
-using XExplorer.Core.Modes;
-using Microsoft.AspNetCore.WebUtilities;
-using Xexplorer.Blazor.Components.Pages;
-
 
 namespace Xexplorer.Blazor.ViewModels.Layout;
 
@@ -137,13 +132,20 @@ public partial class MainViewModel : ViewModelBase
             var api = AppsettingsUtils.Default.Api.FolderCleanAPI;
             if (this.SelectedDir == null || string.IsNullOrWhiteSpace(this.SelectedDir.Name))
             {
-                SnackbarUtils.Warning("请先选择一个文件夹");
-                return;
+                var dirs = Dirs.Where(d => d.Name != string.Empty).Select(d => d.Name).ToArray();
+                foreach (var dir in dirs)
+                {
+                    var body = new { dir = dir };
+                    await _http.PostAsJsonAsync(api, body);
+                    SnackbarUtils.Success($"文件夹 [{dir}] 清理完成.");
+                }
             }
-
-            var body = new { dir = this.SelectedDir.Name, pic_size_limit = 3 };
-            await _http.PostAsJsonAsync(api, body);
-            await DialogUtils.Info($"文件夹 [{this.SelectedDir.Name}] 资源清理完成.");
+            else
+            {
+                var body = new { dir = this.SelectedDir.Name };
+                await _http.PostAsJsonAsync(api, body);
+                SnackbarUtils.Success($"文件夹 [{this.SelectedDir.Name}] 清理完成.");
+            }
         }
         catch (Exception e)
         {

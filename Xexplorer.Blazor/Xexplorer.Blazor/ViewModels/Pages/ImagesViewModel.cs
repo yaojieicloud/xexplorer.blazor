@@ -41,7 +41,6 @@ public class ImagesViewModel : ViewModelBase
         if (this._mainViewModel != null)
         {
             this._mainViewModel.OnQueryImages = QueryAsync;
-            this.QueryAsync(this._mainViewModel.SelectedDir?.Name);
         }
     }
 
@@ -56,7 +55,11 @@ public class ImagesViewModel : ViewModelBase
         try
         {
             var api = AppsettingsUtils.Default.Api.GetImagesApi;
-            var query = new Dictionary<string, string?> { ["dir"] = dir, ["pic_size_limit"] = $"3" };
+            var query = new Dictionary<string, string?> { ["pic_size_limit"] = $"3" };
+
+            if (!string.IsNullOrWhiteSpace(dir))
+                query.Add("dir", dir);
+
             var apiUrl = QueryHelpers.AddQueryString(api, query);
             var response = await _http.GetStringAsync(apiUrl);
             var result = JsonConvert.DeserializeObject<Result<List<string>>>(response);

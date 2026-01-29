@@ -9,7 +9,7 @@
             <MudGrid>
                 <MudItem xs="12">
                     <MudPaper Elevation="1">
-                        <MudInputLabel xs="12" class="video-title">@video.VideoDir</MudInputLabel>
+                        <MudBreadcrumbs Items="@homeVM.GetBreadcrumbs(video.VideoDir)" class="video-title" MaxItems="3"></MudBreadcrumbs>
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
                             <MudTooltip Text="@video.Caption">

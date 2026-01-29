@@ -141,7 +141,7 @@ public partial class MainViewModel : ViewModelBase
                 return;
             }
 
-            var body = new { dir = this.SelectedDir.Name };
+            var body = new { dir = this.SelectedDir.Name, pic_size_limit = 3 };
             await _http.PostAsJsonAsync(api, body);
             await DialogUtils.Info($"文件夹 [{this.SelectedDir.Name}] 资源清理完成.");
         }

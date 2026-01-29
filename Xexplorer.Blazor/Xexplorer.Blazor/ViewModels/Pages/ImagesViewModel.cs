@@ -56,7 +56,7 @@ public class ImagesViewModel : ViewModelBase
         try
         {
             var api = AppsettingsUtils.Default.Api.GetImagesApi;
-            var query = new Dictionary<string, string?> { ["dir"] = dir };
+            var query = new Dictionary<string, string?> { ["dir"] = dir, ["pic_size_limit"] = $"3" };
             var apiUrl = QueryHelpers.AddQueryString(api, query);
             var response = await _http.GetStringAsync(apiUrl);
             var result = JsonConvert.DeserializeObject<Result<List<string>>>(response);

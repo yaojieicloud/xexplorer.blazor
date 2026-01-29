@@ -16,11 +16,17 @@
         @foreach (var img in vm.Images)
         {
             <MudPaper>
-                <MudImage
-                    Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetPicApi}?name={img}")"
-                    Class="image-item"
-                    FallbackSrc="https://cyberdefender.hk/en-us/wp-content/uploads/2021/07/404-01-scaled.jpg"
-                    @onclick="() => vm.ShowCarouselAsync(img)"/>
+                <img src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetPicApi}?name={img}")"
+                     class="image-item"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='https://cyberdefender.hk/en-us/wp-content/uploads/2021/07/404-01-scaled.jpg';"
+                     @onclick="() => vm.ShowCarouselAsync(img)" />
+
+                @* <MudImage *@
+                @*     Src="@($"{AppsettingsUtils.Default.Api.BaseUrl}/{AppsettingsUtils.Default.Api.GetPicApi}?name={img}")" *@
+                @*     Class="image-item" *@
+                @*     FallbackSrc="https://cyberdefender.hk/en-us/wp-content/uploads/2021/07/404-01-scaled.jpg" *@
+                @*     @onclick="() => vm.ShowCarouselAsync(img)"/> *@
             </MudPaper>
         }
     </MudPaper>

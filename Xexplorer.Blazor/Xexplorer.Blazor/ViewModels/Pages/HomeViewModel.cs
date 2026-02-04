@@ -367,6 +367,28 @@ public class HomeViewModel : ViewModelBase
     public List<BreadcrumbItem> GetBreadcrumbs(string path) =>
         path.Split('/').Select(m => new BreadcrumbItem(m, null)).ToList();
 
+    /// <summary>
+    /// 根据视频信息生成面包屑导航项的列表
+    /// </summary>
+    /// <param name="video">包含视频相关信息的Video对象</param>
+    /// <returns>表示面包屑导航项的列表</returns>
+    public List<BreadcrumbItem> GetInfoBreadcrumbs(Video video)
+    {
+        var items = new List<BreadcrumbItem>();
+        items.Add(new BreadcrumbItem($"{video.Minute} Minute", null));
+        items.Add(new BreadcrumbItem($"{video.Minute} MB", null));
+        items.Add(new BreadcrumbItem($"{video.Width} x {video.Height}", null));
+        items.Add(new BreadcrumbItem($"{video.ModifyTime:yyyy-M-d}", null));
+        return items;
+    }
+    
+    /// <summary>
+    /// 根据视频信息生成面包屑导航项的列表
+    /// </summary>
+    /// <param name="video">包含视频相关信息的Video对象</param>
+    /// <returns>表示面包屑导航项的列表</returns>
+    public string GetInfoString(Video video) => $"{video.Minute} Minute {video.Minute} MB {video.Width} x {video.Height} {video.ModifyTime:yyyy-M-d}"; 
+    
     #region private
 
     /// <summary>

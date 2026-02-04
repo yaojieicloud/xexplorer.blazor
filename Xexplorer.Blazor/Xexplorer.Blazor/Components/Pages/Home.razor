@@ -9,7 +9,10 @@
             <MudGrid>
                 <MudItem xs="12">
                     <MudPaper Elevation="1">
-                        <MudBreadcrumbs Items="@homeVM.GetBreadcrumbs(video.VideoDir)" class="video-title" MaxItems="3"></MudBreadcrumbs>
+                        <MudTooltip Text="@video.VideoDir">
+                            <MudBreadcrumbs Items="@homeVM.GetBreadcrumbs(video.VideoDir)" class="breadcrumb-ellipsis"
+                                            MaxItems="3"></MudBreadcrumbs>
+                        </MudTooltip>
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
                             <MudTooltip Text="@video.Caption">
@@ -23,13 +26,10 @@
                                        SelectedValueChanged="@(newValue => homeVM.SetEvaluateAsync(video, newValue))"
                                        Size="Size.Large"/>
                             <MudSpacer/>
-                            <MudInputLabel class="video-title">@video.Minute 分钟</MudInputLabel>
-                            <MudInputLabel class="video-title">==</MudInputLabel>
-                            <MudInputLabel class="video-title">@video.Length MB</MudInputLabel>
-                            <MudInputLabel class="video-title">==</MudInputLabel>
-                            <MudInputLabel class="video-title">@video.Width x @video.Height</MudInputLabel>
-                            <MudInputLabel class="video-title">==</MudInputLabel>
-                            <MudInputLabel class="video-title">@video.ModifyTime?.ToString("yyyy-MM-dd")</MudInputLabel>
+                            <MudTooltip Text="@homeVM.GetInfoString(video)">
+                                <MudBreadcrumbs Items="@homeVM.GetInfoBreadcrumbs(video)" class="breadcrumb-ellipsis"
+                                                MaxItems="5"></MudBreadcrumbs>
+                            </MudTooltip>
                         </MudStack>
                     </MudPaper>
                 </MudItem>
@@ -103,6 +103,27 @@
         padding-left: 10px;
     }
  
+    .breadcrumb-ellipsis {
+        font-family: 'AlimamaThin';
+        font-weight: normal;
+        font-size: 20px;
+        padding-bottom: 3px;
+        padding-top: 3px;
+        padding-left: 10px;
+        display: flex; /* 水平排列子项 */
+        flex-wrap: nowrap; /* 不换行 */
+        overflow: hidden; /* 超出隐藏 */
+        text-overflow: ellipsis; /* 省略号 */
+        white-space: nowrap; /* 单行 */
+        max-width: 90vh; /* 控制总宽度 */
+    }
+
+    .breadcrumb-ellipsis .mud-breadcrumb-item {
+        flex-shrink: 0; /* 防止子项被压缩到看不见 */
+        margin-right: 8px; /* 间距可调 */
+    }
+
+
     .video-title {
         font-family: 'AlimamaThin';
         font-weight: normal;

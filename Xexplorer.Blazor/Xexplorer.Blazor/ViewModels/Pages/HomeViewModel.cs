@@ -376,7 +376,7 @@ public class HomeViewModel : ViewModelBase
     {
         var items = new List<BreadcrumbItem>();
         items.Add(new BreadcrumbItem($"{video.Minute} Minute", null));
-        items.Add(new BreadcrumbItem($"{video.Minute} MB", null));
+        items.Add(new BreadcrumbItem($"{video.Length} MB", null));
         items.Add(new BreadcrumbItem($"{video.Width} x {video.Height}", null));
         items.Add(new BreadcrumbItem($"{video.ModifyTime:yyyy-M-d}", null));
         return items;

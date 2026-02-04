@@ -11,7 +11,7 @@
                     <MudPaper Elevation="1">
                         <MudTooltip Text="@video.VideoDir">
                             <MudBreadcrumbs Items="@homeVM.GetBreadcrumbs(video.VideoDir)" class="breadcrumb-ellipsis"
-                                            MaxItems="3"></MudBreadcrumbs>
+                                            ></MudBreadcrumbs>
                         </MudTooltip>
                         <MudDivider Class="video-divider"/>
                         <MudStack Row="true" Spacing="2" Class="title-strip">
@@ -28,7 +28,7 @@
                             <MudSpacer/>
                             <MudTooltip Text="@homeVM.GetInfoString(video)">
                                 <MudBreadcrumbs Items="@homeVM.GetInfoBreadcrumbs(video)" class="breadcrumb-ellipsis"
-                                                MaxItems="5"></MudBreadcrumbs>
+                                                ></MudBreadcrumbs>
                             </MudTooltip>
                         </MudStack>
                     </MudPaper>

@@ -264,16 +264,20 @@ public class HomeViewModel : ViewModelBase
     /// <returns>表示异步操作的任务</returns>
     public async Task SetEvaluateAsync(Video video, int newValue)
     {
+        var oldEvaluate = video.Evaluate;
+
         try
         {
             var api = AppsettingsUtils.Default.Api.SetEvaluateApi;
             var body = new { id = video.Id, evaluate = newValue };
             var response = await _http.PostAsJsonAsync(api, body);
             response.EnsureSuccessStatusCode();
-            SnackbarUtils.Success($"视频[{video.Caption}]已评分!");
+            video.Evaluate = newValue;
+            SnackbarUtils.Success($"视频[{video.Caption}]已评分 {video.Evaluate} 星!");
         }
         catch (Exception e)
         {
+            video.Evaluate = oldEvaluate;
             await DialogUtils.Error(e);
         }
     }
